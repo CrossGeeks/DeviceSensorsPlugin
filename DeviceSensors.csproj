@@ -25,15 +25,16 @@
     <RepositoryUrl>https://github.com/CrossGeeks/DeviceSensorsPlugin</RepositoryUrl>
     <PackageReleaseNotes>Support to access device sensors</PackageReleaseNotes>
     <PackageIconUrl>https://github.com/rdelrosario/xamarin-plugins/blob/master/DeviceMotion/Resources/icon.png?raw=true</PackageIconUrl>
-    <PackageTags>xamarin, windows, ios, android, xamarin.forms, plugin, device,sensors,accelerometer,gyroscope,magnometer,barometer,pedometer</PackageTags>
+    <PackageTags>xamarin, windows, ios, android, xamarin.forms, plugin, device,sensors,accelerometer,gyroscope,magnetometer,barometer,pedometer</PackageTags>
     
-    <Title>DeviceSensors Plugin for Xamarin and Windows</Title>
+    <Title>Device Sensors Plugin for Xamarin and Windows</Title>
     <Summary>Simple cross platform plugin to get device sensors readings such as: Accelerometer, Gyroscope, Magnetometer, Barometer, Pedometer.</Summary>
     <Description>Simple cross platform plugin to get device sensors readings such as: Accelerometer, Gyroscope, Magnetometer, Barometer, Pedometer.</Description>
 
     <Owners>crossgeeks,rdelrosario</Owners>
     <Authors>Rendy Del Rosario</Authors>
     <Copyright>Copyright 2018</Copyright>
+    <Company>CrossGeeks</Company>
   </PropertyGroup>
 
   <ItemGroup>

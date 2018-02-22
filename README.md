@@ -27,7 +27,55 @@ Simple cross platform plugin to access device sensors.
 
 Call **CrossDeviceSensors.Current** from any project or PCL to gain access to APIs.
 
+Device Sensor interface
 
+```cs
+public interface IDeviceSensor<T>
+    {
+        /// <summary>
+        /// Check if sensor supported
+        /// </summary>
+        bool IsSupported { get; }
+        /// <summary>
+        /// Check if sensor is active
+        /// </summary>
+        bool IsActive { get; }
+        /// <summary>
+        /// Get latest sensor reading
+        /// </summary>
+        T LastReading {get;}
+        /// <summary>
+        /// Sets/get sensor report interval
+        /// </summary>
+        int ReadingInterval { get; set; }
+        /// <summary>
+        /// Starts sensor reading
+        /// </summary>
+        void StartReading(int readingInterval = -1);
+        /// <summary>
+        /// Stops sensor reading
+        /// </summary>
+        void StopReading();
+
+        /// <summary>
+        /// Sensor reading changes event
+        /// </summary>
+        event EventHandler<DeviceSensorReadingEventArgs<T>> OnReadingChanged;
+    }
+```
+
+Available sensors
+
+```cs
+    public interface IDeviceSensors
+    {
+       IDeviceSensor<VectorReading> Accelerometer {get; }
+       IDeviceSensor<VectorReading> Gyroscope { get; }
+       IDeviceSensor<VectorReading> Magnetometer { get; }
+       IDeviceSensor<double> Barometer { get; }
+       IDeviceSensor<int> Pedometer { get; }
+    }
+```
 Usage sample:
 
 Accelerometer
@@ -37,7 +85,7 @@ Accelerometer
          CrossDeviceSensors.Current.Accelerometer.OnReadingChanged += (s,a)=>{
 
          };
-         CrossDeviceSensors.Current.Accelerometer.Start();
+         CrossDeviceSensors.Current.Accelerometer.StartReading();
     }
    
 
@@ -51,7 +99,7 @@ Gyroscope
          CrossDeviceSensors.Current.Gyroscope.OnReadingChanged += (s,a)=>{
 
          };
-         CrossDeviceSensors.Current.Gyroscope.Start();
+         CrossDeviceSensors.Current.Gyroscope.StartReading();
     }
    
 
@@ -64,7 +112,7 @@ Magnetometer
          CrossDeviceSensors.Current.Magnetometer.OnReadingChanged += (s,a)=>{
 
          };
-         CrossDeviceSensors.Current.Magnetometer.Start();
+         CrossDeviceSensors.Current.Magnetometer.StartReading();
     }
    
 
