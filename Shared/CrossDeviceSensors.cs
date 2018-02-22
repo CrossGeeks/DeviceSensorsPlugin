@@ -36,7 +36,7 @@ namespace Plugin.DeviceSensors
             return null;
 #else
 #pragma warning disable IDE0022 // Use expression body for methods
-            return new DeviceSensorsImplementation();
+            return new DeviceSensorsManager();
 #pragma warning restore IDE0022 // Use expression body for methods
 #endif
         }

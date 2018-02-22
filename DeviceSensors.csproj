@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard1.0;netstandard2.0;MonoAndroid80;Xamarin.iOS10;uap10.0.15063;Xamarin.TVOS10;Xamarin.WatchOS10;Xamarin.Mac20;</TargetFrameworks>
+    <TargetFrameworks>netstandard1.0;netstandard2.0;MonoAndroid80;Xamarin.iOS10;uap10.0.15063;Tizen40;</TargetFrameworks>
     <AssemblyName>Plugin.DeviceSensors</AssemblyName>
     <RootNamespace>Plugin.DeviceSensors</RootNamespace>
     <PackageId>Plugin.DeviceSensors</PackageId>
@@ -20,20 +20,19 @@
     <UseFullSemVerForNuGet>false</UseFullSemVerForNuGet>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     
-    <!--TODO: Fill these in-->
-    <PackageLicenseUrl>LINK TO LICENSE</PackageLicenseUrl>
-    <PackageProjectUrl>LINK TO PROJECT</PackageProjectUrl>
-    <RepositoryUrl>LINK TO PROJECT</RepositoryUrl>
-    <PackageReleaseNotes>RELEASE NOTES</PackageReleaseNotes>
-    <PackageIconUrl>ICON URL</PackageIconUrl>
-    <PackageTags>xamarin, windows, ios, android, xamarin.forms, plugin, DeviceSensors</PackageTags>
+    <PackageLicenseUrl>https://github.com/CrossGeeks/DeviceSensorsPlugin/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageProjectUrl>https://github.com/CrossGeeks/DeviceSensorsPlugin</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/CrossGeeks/DeviceSensorsPlugin</RepositoryUrl>
+    <PackageReleaseNotes>Support to access device sensors</PackageReleaseNotes>
+    <PackageIconUrl>https://github.com/rdelrosario/xamarin-plugins/blob/master/DeviceMotion/Resources/icon.png?raw=true</PackageIconUrl>
+    <PackageTags>xamarin, windows, ios, android, xamarin.forms, plugin, device,sensors,accelerometer,gyroscope,magnometer,barometer,pedometer</PackageTags>
     
     <Title>DeviceSensors Plugin for Xamarin and Windows</Title>
-    <Summary>Summary of nuget</Summary>
-    <Description>Plugin Description</Description>
+    <Summary>Simple cross platform plugin to get device sensors readings such as: Accelerometer, Gyroscope, Magnetometer, Barometer, Pedometer.</Summary>
+    <Description>Simple cross platform plugin to get device sensors readings such as: Accelerometer, Gyroscope, Magnetometer, Barometer, Pedometer.</Description>
 
-    <Owners>YOU</Owners>
-    <Authors>YOU</Authors>
+    <Owners>crossgeeks,rdelrosario</Owners>
+    <Authors>Rendy Del Rosario</Authors>
     <Copyright>Copyright 2018</Copyright>
   </PropertyGroup>
 
@@ -61,20 +60,29 @@
     <Compile Include="Platforms\iOS\**\*.cs" />
   </ItemGroup>
 
+  <ItemGroup Condition=" '$(TargetFramework)' == 'Tizen40' ">
+    <Compile Include="Platforms\Tizen\**\*.cs" />
+    <PackageReference Include="Tizen.NET" Version="4.0.0" />
+  </ItemGroup>
 
+<!--
   <ItemGroup Condition=" '$(TargetFramework)' == 'Xamarin.TVOS10' ">
     <Compile Include="Platforms\TVOS\**\*.cs" />
   </ItemGroup>
+  -->
 
-
+<!--
   <ItemGroup Condition=" '$(TargetFramework)' == 'Xamarin.WatchOS10' ">
     <Compile Include="Platforms\WatchOS\**\*.cs" />
   </ItemGroup>
+    -->
 
-
+<!--
   <ItemGroup Condition=" '$(TargetFramework)' == 'Xamarin.Mac20' ">
     <Compile Include="Platforms\macOS\**\*.cs" />
   </ItemGroup>
+  -->
+
 
   <!--
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp2.0' ">
@@ -82,13 +90,6 @@
   </ItemGroup>
   -->
 
-
-  <!--
-  <ItemGroup Condition=" '$(TargetFramework)' == 'Tizen40' ">
-    <Compile Include="Platforms\Tizen\**\*.cs" />
-    <PackageReference Include="Tizen.NET" Version="4.0.0" />
-  </ItemGroup>
-  -->
   
   <!--
     <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
