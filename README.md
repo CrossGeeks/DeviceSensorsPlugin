@@ -29,9 +29,8 @@ Call **CrossDeviceSensors.Current** from any project or PCL to gain access to AP
 
 #### iOS Setup
 
-Add to your Info.plist NSMotionUsageDescription key:
+Add to your Info.plist **NSMotionUsageDescription** key:
 
-NSMotionUsageDescription
 ```
 <key>NSMotionUsageDescription</key>
 <string>This app needs to be able to access your motion use</string>
