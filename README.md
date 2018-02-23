@@ -36,7 +36,7 @@ Add to your Info.plist **NSMotionUsageDescription** key:
 <string>This app needs to be able to access your motion use</string>
 ```
 
-#### Usage
+#### Getting Started
 
 Device Sensor interface
 
