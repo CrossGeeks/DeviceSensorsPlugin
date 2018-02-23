@@ -27,6 +27,18 @@ Simple cross platform plugin to access device sensors.
 
 Call **CrossDeviceSensors.Current** from any project or PCL to gain access to APIs.
 
+#### iOS Setup
+
+Add to your Info.plist NSMotionUsageDescription key:
+
+NSMotionUsageDescription
+```
+<key>NSMotionUsageDescription</key>
+<string>This app needs to be able to access your motion use</string>
+```
+
+#### Usage
+
 Device Sensor interface
 
 ```cs
