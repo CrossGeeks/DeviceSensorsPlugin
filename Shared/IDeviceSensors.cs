@@ -11,8 +11,6 @@ namespace Plugin.DeviceSensors
        IDeviceSensor<VectorReading> Accelerometer {get; }
        IDeviceSensor<VectorReading> Gyroscope { get; }
        IDeviceSensor<VectorReading> Magnetometer { get; }
-
-       //IDeviceSensor<CompassReading> Compass { get; }
        IDeviceSensor<double> Barometer { get; }
        IDeviceSensor<int> Pedometer { get; }
     }

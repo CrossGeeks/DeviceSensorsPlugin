@@ -39,6 +39,7 @@ namespace Plugin.DeviceSensors.Platforms.UWP
         public int ReadingInterval { get { return (int)accelerometer.ReportInterval; } set { accelerometer.ReportInterval = (uint)value; } }
 
         public event EventHandler<DeviceSensorReadingEventArgs<VectorReading>> OnReadingChanged;
+        public event EventHandler<DeviceSensorReadingErrorEventArgs> OnReadingError;
 
         public void StartReading(int reportInterval = -1)
         {

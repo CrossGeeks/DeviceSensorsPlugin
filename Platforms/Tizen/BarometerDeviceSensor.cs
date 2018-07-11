@@ -44,6 +44,7 @@ namespace Plugin.DeviceSensors.Platforms.Tizen
         public int ReadingInterval { get { return (int)_pressureSensor.Interval; } set { _pressureSensor.Interval = (uint)value; } }
 
         public event EventHandler<DeviceSensorReadingEventArgs<double>> OnReadingChanged;
+        public event EventHandler<DeviceSensorReadingErrorEventArgs> OnReadingError;
 
         public void StartReading(int reportInterval = -1)
         {

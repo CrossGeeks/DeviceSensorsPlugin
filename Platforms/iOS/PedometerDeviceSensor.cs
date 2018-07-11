@@ -15,8 +15,8 @@ namespace Plugin.DeviceSensors.Platforms.iOS
         int _readingInterval;
         bool firstRead = false;
 
-        static readonly Lazy<CMStepCounter> stepCounter = new Lazy<CMStepCounter>(() => new CMStepCounter());
-        public bool IsSupported => CMStepCounter.IsStepCountingAvailable;
+        static readonly Lazy<CMPedometer> stepCounter = new Lazy<CMPedometer>(() => new CMPedometer());
+        public bool IsSupported => CMPedometer.IsStepCountingAvailable;
 
         public bool IsActive { get { return isActive; } }
 
@@ -36,6 +36,7 @@ namespace Plugin.DeviceSensors.Platforms.iOS
         }
 
         public event EventHandler<DeviceSensorReadingEventArgs<int>> OnReadingChanged;
+        public event EventHandler<DeviceSensorReadingErrorEventArgs> OnReadingError;
 
         public void StartReading(int reportInterval = -1)
         {
@@ -44,25 +45,33 @@ namespace Plugin.DeviceSensors.Platforms.iOS
             {
                 _readingInterval = reportInterval;
             }
-            stepCounter.Value.StartStepCountingUpdates(NSOperationQueue.CurrentQueue,1, OnPedometerChanged);
+            stepCounter.Value.StartPedometerUpdates(NSDate.Now, OnPedometerChanged);
         }
 
-        private void OnPedometerChanged(nint numberOfSteps, NSDate timestamp, NSError error)
+        private void OnPedometerChanged(CMPedometerData pedometerData, NSError error)
         {
-            var currentReadingTime = DateTime.Now;
-
-            if (firstRead || (currentReadingTime - _lastReadingTime).TotalMilliseconds >= ReadingInterval)
+            if(error == null)
             {
-                lastReading = (int)numberOfSteps;
-                OnReadingChanged?.Invoke(this, new DeviceSensorReadingEventArgs<int>(lastReading));
-                firstRead = false;
+                var currentReadingTime = DateTime.Now;
+
+                if (firstRead || (currentReadingTime - _lastReadingTime).TotalMilliseconds >= ReadingInterval)
+                {
+                    lastReading = (int)pedometerData.NumberOfSteps;
+                    OnReadingChanged?.Invoke(this, new DeviceSensorReadingEventArgs<int>(lastReading));
+                    firstRead = false;
+                }
             }
+            else
+            {
+                OnReadingError?.Invoke(this, new DeviceSensorReadingErrorEventArgs(error.Description));
+            }
+           
         }
 
         public void StopReading()
         {
             firstRead = false;
-            stepCounter.Value.StopStepCountingUpdates();
+            stepCounter.Value.StopPedometerUpdates();
         }
         
     }

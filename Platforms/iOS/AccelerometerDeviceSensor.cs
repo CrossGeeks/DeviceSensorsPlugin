@@ -40,6 +40,7 @@ namespace Plugin.DeviceSensors.Platforms.iOS
         public int ReadingInterval { get { return Convert.ToInt32(_motionManager.AccelerometerUpdateInterval); } set { _motionManager.AccelerometerUpdateInterval = value; } }
 
         public event EventHandler<DeviceSensorReadingEventArgs<VectorReading>> OnReadingChanged;
+        public event EventHandler<DeviceSensorReadingErrorEventArgs> OnReadingError;
 
         public void StartReading(int reportInterval = -1)
         {
@@ -47,8 +48,16 @@ namespace Plugin.DeviceSensors.Platforms.iOS
             {
                 _motionManager.AccelerometerUpdateInterval = reportInterval;
             }
+
+            try
+            {
+                _motionManager.StartAccelerometerUpdates(NSOperationQueue.MainQueue, OnAccelerometerChanged);
+            }
+            catch(Exception ex)
+            {
+                 OnReadingError?.Invoke(this, new DeviceSensorReadingErrorEventArgs("Accelerometer - Not called from the UIThread"));
+            }
             
-            _motionManager.StartAccelerometerUpdates(NSOperationQueue.CurrentQueue, OnAccelerometerChanged);
         }
 
         public void StopReading()
@@ -64,7 +73,14 @@ namespace Plugin.DeviceSensors.Platforms.iOS
         /// <param name="error">Error.</param>
         void OnAccelerometerChanged(CMAccelerometerData data, NSError error)
         {
-            OnReadingChanged?.Invoke(this,new DeviceSensorReadingEventArgs<VectorReading>(new VectorReading(data.Acceleration.X, data.Acceleration.Y, data.Acceleration.Z)));
+            if (error == null)
+            {
+                OnReadingChanged?.Invoke(this,new DeviceSensorReadingEventArgs<VectorReading>(new VectorReading(data.Acceleration.X, data.Acceleration.Y, data.Acceleration.Z)));
+            }
+            else
+            {
+                OnReadingError?.Invoke(this, new DeviceSensorReadingErrorEventArgs(error.Description));
+            }
         }
     }
 }

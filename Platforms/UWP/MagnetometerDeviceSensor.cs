@@ -40,7 +40,7 @@ namespace Plugin.DeviceSensors.Platforms.UWP
         public int ReadingInterval { get { return (int)_magnetometer.ReportInterval; } set { _magnetometer.ReportInterval = (uint)value; } }
 
         public event EventHandler<DeviceSensorReadingEventArgs<VectorReading>> OnReadingChanged;
-
+        public event EventHandler<DeviceSensorReadingErrorEventArgs> OnReadingError;
         public void StartReading(int reportInterval = -1)
         {
             if (reportInterval >= 0)

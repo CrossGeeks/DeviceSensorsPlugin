@@ -40,6 +40,7 @@ namespace Plugin.DeviceSensors.Platforms.UWP
         public int ReadingInterval { get { return (int)_barometer.ReportInterval; } set { _barometer.ReportInterval = (uint)value; } }
 
         public event EventHandler<DeviceSensorReadingEventArgs<double>> OnReadingChanged;
+        public event EventHandler<DeviceSensorReadingErrorEventArgs> OnReadingError;
 
         public void StartReading(int reportInterval = -1)
         {

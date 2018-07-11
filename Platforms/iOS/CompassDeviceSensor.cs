@@ -23,6 +23,7 @@ namespace Plugin.DeviceSensors.Platforms.iOS
         public int ReadingInterval { get; set; }
 
         public event EventHandler<DeviceSensorReadingEventArgs<CompassReading>> OnReadingChanged;
+        public event EventHandler<DeviceSensorReadingErrorEventArgs> OnReadingError;
 
         public void StartReading(int interval = -1)
         {
@@ -33,8 +34,7 @@ namespace Plugin.DeviceSensors.Platforms.iOS
 
         void UpdatedHeading(object sender, CLHeadingUpdatedEventArgs e)
         {
-            OnReadingChanged?.Invoke(this, new DeviceSensorReadingEventArgs<CompassReading>(new CompassReading(e.NewHeading.HeadingAccuracy < 0 ? CompassAccuracy.Unreliable : CompassAccuracy.High,e.NewHeading.MagneticHeading,e.NewHeading.TrueHeading)));
-
+             OnReadingChanged?.Invoke(this, new DeviceSensorReadingEventArgs<CompassReading>(new CompassReading(e.NewHeading.HeadingAccuracy < 0 ? CompassAccuracy.Unreliable : CompassAccuracy.High,e.NewHeading.MagneticHeading,e.NewHeading.TrueHeading)));     
         }
 
         public void StopReading()

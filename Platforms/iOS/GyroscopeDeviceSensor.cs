@@ -39,6 +39,7 @@ namespace Plugin.DeviceSensors.Platforms.iOS
         public int ReadingInterval { get { return Convert.ToInt32(_motionManager.GyroUpdateInterval); } set { _motionManager.GyroUpdateInterval = value; } }
 
         public event EventHandler<DeviceSensorReadingEventArgs<VectorReading>> OnReadingChanged;
+        public event EventHandler<DeviceSensorReadingErrorEventArgs> OnReadingError;
 
         public void StartReading(int reportInterval = -1)
         {
@@ -47,7 +48,15 @@ namespace Plugin.DeviceSensors.Platforms.iOS
                 _motionManager.GyroUpdateInterval = reportInterval;
             }
 
-            _motionManager.StartGyroUpdates(NSOperationQueue.CurrentQueue, OnGyroscopeChanged);
+            try
+            {
+                _motionManager.StartGyroUpdates(NSOperationQueue.MainQueue, OnGyroscopeChanged);
+            }
+            catch (Exception ex)
+            {
+                OnReadingError?.Invoke(this, new DeviceSensorReadingErrorEventArgs("Gyroscope - Not called from the UIThread"));
+            }
+            
         }
 
         public void StopReading()
@@ -63,7 +72,14 @@ namespace Plugin.DeviceSensors.Platforms.iOS
         /// <param name="error">Error.</param>
         void OnGyroscopeChanged(CMGyroData data, NSError error)
         {
-            OnReadingChanged?.Invoke(this, new DeviceSensorReadingEventArgs<VectorReading>(new VectorReading(data.RotationRate.x, data.RotationRate.y, data.RotationRate.z)));
+            if (error == null)
+            {
+                OnReadingChanged?.Invoke(this, new DeviceSensorReadingEventArgs<VectorReading>(new VectorReading(data.RotationRate.x, data.RotationRate.y, data.RotationRate.z)));
+            }
+            else
+            {
+                OnReadingError?.Invoke(this, new DeviceSensorReadingErrorEventArgs(error.Description));
+            }
         }
     }
 }

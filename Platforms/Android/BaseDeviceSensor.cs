@@ -53,6 +53,7 @@ namespace Plugin.DeviceSensors.Platforms.Android
         }
 
         public event EventHandler<DeviceSensorReadingEventArgs<T>> OnReadingChanged;
+        public event EventHandler<DeviceSensorReadingErrorEventArgs> OnReadingError;
 
         public void OnAccuracyChanged(Sensor sensor, [GeneratedEnum] SensorStatus accuracy)
         {

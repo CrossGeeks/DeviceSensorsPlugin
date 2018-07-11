@@ -43,6 +43,7 @@ namespace Plugin.DeviceSensors.Platforms.Tizen
         public int ReadingInterval { get { return (int)_pedometer.Interval; } set { _pedometer.Interval = (uint)value; } }
 
         public event EventHandler<DeviceSensorReadingEventArgs<int>> OnReadingChanged;
+        public event EventHandler<DeviceSensorReadingErrorEventArgs> OnReadingError;
 
         public void StartReading(int reportInterval = -1)
         {

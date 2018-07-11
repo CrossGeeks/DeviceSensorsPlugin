@@ -43,11 +43,21 @@ namespace Plugin.DeviceSensors.Platforms.iOS
         }
 
         public event EventHandler<DeviceSensorReadingEventArgs<double>> OnReadingChanged;
+        public event EventHandler<DeviceSensorReadingErrorEventArgs> OnReadingError;
 
         public void StartReading(int reportingInterval = -1)
         {
             firstRead = true;
-            altimeter.Value.StartRelativeAltitudeUpdates(NSOperationQueue.CurrentQueue, OnBarometerChanged);
+
+            try
+            {
+                altimeter.Value.StartRelativeAltitudeUpdates(NSOperationQueue.MainQueue, OnBarometerChanged);
+            }
+            catch (Exception ex)
+            {
+                OnReadingError?.Invoke(this, new DeviceSensorReadingErrorEventArgs("Barometer - Not called from the UIThread"));
+            }
+
             if (reportingInterval >= 0)
             {
                 _readingInterval = reportingInterval;
@@ -64,14 +74,22 @@ namespace Plugin.DeviceSensors.Platforms.iOS
 
         void OnBarometerChanged(CMAltitudeData data, NSError error)
         {
-            var currentReadingTime = DateTime.Now;
-
-            if (firstRead || (currentReadingTime - _lastReadingTime).TotalMilliseconds >= ReadingInterval)
+            if (error == null)
             {
-                _lastReading = data.Pressure.DoubleValue;
-                OnReadingChanged?.Invoke(this, new DeviceSensorReadingEventArgs<double>(_lastReading));
-                firstRead = false;
+                var currentReadingTime = DateTime.Now;
+
+                if (firstRead || (currentReadingTime - _lastReadingTime).TotalMilliseconds >= ReadingInterval)
+                {
+                    _lastReading = data.Pressure.DoubleValue;
+                    OnReadingChanged?.Invoke(this, new DeviceSensorReadingEventArgs<double>(_lastReading));
+                    firstRead = false;
+                }
             }
+            else
+            {
+                OnReadingError?.Invoke(this, new DeviceSensorReadingErrorEventArgs(error.Description));
+            }
+            
         }
     }
 }

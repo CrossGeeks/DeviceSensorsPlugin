@@ -45,6 +45,24 @@ namespace Plugin.DeviceSensors.Shared
         }
 
     }
+
+    /// <summary>
+    /// Device sensor reading error event arguments
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    public class DeviceSensorReadingErrorEventArgs : EventArgs
+    {
+        /// <summary>
+        /// Sensor reading
+        /// </summary>
+        public string Message { get; }
+
+        public DeviceSensorReadingErrorEventArgs(string msg)
+        {
+            Message = msg;
+        }
+
+    }
     public interface IDeviceSensor<T>
     {
         /// <summary>
@@ -76,5 +94,10 @@ namespace Plugin.DeviceSensors.Shared
         /// Sensor reading changes event
         /// </summary>
         event EventHandler<DeviceSensorReadingEventArgs<T>> OnReadingChanged;
+
+        /// <summary>
+        /// Sensor reading error event
+        /// </summary>
+        event EventHandler<DeviceSensorReadingErrorEventArgs> OnReadingError;
     }
 }

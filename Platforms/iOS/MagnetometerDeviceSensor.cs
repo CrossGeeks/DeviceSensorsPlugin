@@ -40,13 +40,23 @@ namespace Plugin.DeviceSensors.Platforms.iOS
 
         public event EventHandler<DeviceSensorReadingEventArgs<VectorReading>> OnReadingChanged;
 
+        public event EventHandler<DeviceSensorReadingErrorEventArgs> OnReadingError;
+
         public void StartReading(int reportInterval = -1)
         {
             if (reportInterval > 0)
             {
                 _motionManager.MagnetometerUpdateInterval = reportInterval;
             }
-            _motionManager.StartMagnetometerUpdates(NSOperationQueue.CurrentQueue, OnMagnetoMeterChanged);
+           
+            try
+            {
+                _motionManager.StartMagnetometerUpdates(NSOperationQueue.MainQueue, OnMagnetoMeterChanged);
+            }
+            catch (Exception ex)
+            {
+                OnReadingError?.Invoke(this, new DeviceSensorReadingErrorEventArgs("Magnetometer - Not called from the UIThread"));
+            }
         }
 
         public void StopReading()
@@ -62,7 +72,14 @@ namespace Plugin.DeviceSensors.Platforms.iOS
         /// <param name="error">Error.</param>
         void OnMagnetoMeterChanged(CMMagnetometerData data, NSError error)
         {
-            OnReadingChanged?.Invoke(this, new DeviceSensorReadingEventArgs<VectorReading>(new VectorReading(data.MagneticField.X, data.MagneticField.Y, data.MagneticField.Z)));
+            if (error == null)
+            {
+                OnReadingChanged?.Invoke(this, new DeviceSensorReadingEventArgs<VectorReading>(new VectorReading(data.MagneticField.X, data.MagneticField.Y, data.MagneticField.Z)));
+            }
+            else
+            {
+                OnReadingError?.Invoke(this, new DeviceSensorReadingErrorEventArgs(error.Description));
+            }
         }
     }
 }
